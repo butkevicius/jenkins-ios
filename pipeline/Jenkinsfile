@@ -1,0 +1,18 @@
+node('imac') {
+    stage('Build') {
+        checkout scm
+        properties([buildDiscarder(logRotator(numToKeepStr: '15'))])
+        
+        withCredentials([string(credentialsId: 'JENKINS_PASS', variable: 'JENKINS_PASS')]) {
+            ansiColor('xterm') {
+                sh '''#!/bin/bash -l
+                security -v unlock-keychain -p "$JENKINS_PASS" /Users/jenkins/Library/Keychains/login.keychain
+                bundle install
+                bundle exec fastlane build
+                '''        
+            }    
+        }        
+
+        archive 'build/*.ipa, build/*.zip'
+    }
+}
