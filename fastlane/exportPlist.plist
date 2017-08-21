@@ -5,7 +5,7 @@
         <key>teamID</key>
         <string>TEAM_ID</string>
         <key>method</key>
-        <string>development</string>
+        <string>enterprise</string>
         <true/>
 </dict>
 </plist>

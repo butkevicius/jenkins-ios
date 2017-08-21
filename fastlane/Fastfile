@@ -1,14 +1,13 @@
-fastlane_version "1.104.0"
+fastlane_version "2.53.1"
 
 opt_out_usage
-
 default_platform :ios
 
 platform :ios do
   desc "Runs all the tests"
   lane :test do
     scan(
-      project: "PROJ.xcodeproj",
+      workspace: "PROJ.xcworkspace",
       configuration: "Debug",
       scheme: "SCHEME",
       clean: true,
@@ -20,23 +19,21 @@ platform :ios do
   desc "Build app"
   lane :build do
     output_name = 'NAME'
-    git_branch = (ENV['GIT_BRANCH'] || '').gsub('origin/', '')
+    git_branch = (ENV['BRANCH_NAME'] || '').gsub('origin/', '')
     git_commit = (ENV['GIT_COMMIT'] || '')[0, 7]
     if (git_branch && git_commit)
       output_name = "#{output_name}_#{git_branch}_#{git_commit}"
     end
 
     gym(
-      project: "PROJ.xcodeproj",
-      configuration: "Debug",
+      workspace: "PROJ.xcworkspace",
+      configuration: "Release",
       scheme: "SCHEME",
       clean: true,
       output_directory: "./build",
       output_name: "#{output_name}.ipa",
-      #codesigning_identity: "iPhone Developer: Name (AAAAA99999)",
-      #xcargs: "PROVISIONING_PROFILE={PROFILE}",
-      #use_legacy_build_api: true
-      export_options: "fastlane/exportPlist-dev.plist"
+      export_options: "fastlane/exportPlist.plist",
       )
   end
 end
+
